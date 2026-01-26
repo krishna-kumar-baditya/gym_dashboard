@@ -36,7 +36,7 @@ export async function getRecentSubmissions() {
       name: m.name,
       type: "Membership",
       submitted_at: dayjs(m.created_at).fromNow(),
-      status: m.status ?? "Pending",
+      status: m.is_active ? "Active" : "Inactive",
     })),
 
     ...(testimonials.data ?? []).map(t => ({

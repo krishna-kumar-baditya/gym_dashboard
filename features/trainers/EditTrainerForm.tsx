@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { updateTrainer, uploadTrainerImage } from "./trainers.service";
-import { Trainer } from "./trainers.types";
+import { Trainer } from "./trainer.types";
 
 export default function EditTrainerModal({
     open,
@@ -70,16 +70,6 @@ export default function EditTrainerModal({
                             setForm({
                                 ...form,
                                 experience_years: Number(e.target.value),
-                            })
-                        }
-                        className="w-full bg-[#2a2a3d] px-3 py-2 rounded"
-                    />
-                    <input
-                        value={form.social_links?.instagram || ""}
-                        onChange={(e) =>
-                            setForm({
-                                ...form,
-                                social_links: { instagram: e.target.value },
                             })
                         }
                         className="w-full bg-[#2a2a3d] px-3 py-2 rounded"

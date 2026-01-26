@@ -8,7 +8,6 @@ export default function AddTrainerModal({ open, onClose, onSuccess }: any) {
     const [name, setName] = useState("");
     const [specialty, setSpecialty] = useState("");
     const [experienceYears, setExperienceYears] = useState<number | "">("");
-    const [instagram, setInstagram] = useState("");
     const [image, setImage] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
 
@@ -27,7 +26,6 @@ export default function AddTrainerModal({ open, onClose, onSuccess }: any) {
                 experience_years:
                     experienceYears === "" ? null : Number(experienceYears),
                 image_url,
-                social_links: instagram ? { instagram } : null,
                 is_active: true,
             });
 
@@ -69,11 +67,6 @@ export default function AddTrainerModal({ open, onClose, onSuccess }: any) {
                                     : Number(e.target.value),
                             )
                         }
-                        className="w-full bg-[#2a2a3d] px-3 py-2 rounded"
-                    />
-                    <input
-                        placeholder="Instagram URL (optional)"
-                        onChange={(e) => setInstagram(e.target.value)}
                         className="w-full bg-[#2a2a3d] px-3 py-2 rounded"
                     />
                     <input

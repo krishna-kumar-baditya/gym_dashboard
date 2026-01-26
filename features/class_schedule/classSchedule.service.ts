@@ -45,6 +45,7 @@ export const getClassSchedules = async (
         description,
         is_active,
         trainer_id,
+        created_at,
         trainer:trainers (
           id,
           name
@@ -67,8 +68,17 @@ export const getClassSchedules = async (
     throw error;
   }
 
+  // Transform the data to match ClassSchedule type
+  // Supabase returns trainer as an array for relations, but we need it as an object
+  const transformedData = (data ?? []).map((item: any) => ({
+    ...item,
+    trainer: Array.isArray(item.trainer) 
+      ? (item.trainer[0] || undefined)
+      : item.trainer,
+  }));
+
   return {
-    data: (data ?? []) as ClassSchedule[],
+    data: transformedData as ClassSchedule[],
     count: count ?? 0,
   };
 };

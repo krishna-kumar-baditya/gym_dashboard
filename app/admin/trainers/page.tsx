@@ -96,7 +96,7 @@ export default function TrainersPage() {
                                 <div>
                                     <div className="w-12 h-12 rounded-md overflow-hidden border border-white/10">
                                         <Image
-                                            src={t.image_url as string }
+                                            src={t.image_url || "/placeholder.png"}
                                             alt={t.name}
                                             width={48}
                                             height={48}
@@ -158,7 +158,7 @@ export default function TrainersPage() {
                             <div className="flex gap-4">
                                 <div className="w-14 h-14 rounded-md overflow-hidden border border-white/10">
                                     <img
-                                        src={t.image_url}
+                                        src={t.image_url || "/placeholder.png"}
                                         alt={t.name}
                                         width={56}
                                         height={56}
@@ -174,7 +174,9 @@ export default function TrainersPage() {
                                         {t.specialty}
                                     </p>
                                     <p className="text-sm text-slate-300 mt-1">
-                                        Experience: {t.experience}
+                                        Experience: {t.experience_years
+                                        ? `${t.experience_years} years`
+                                        : "—"}
                                     </p>
                                 </div>
                             </div>

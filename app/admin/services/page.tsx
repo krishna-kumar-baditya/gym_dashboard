@@ -157,8 +157,9 @@ export default function ServicesPage() {
                   >
                     <td className="px-5 py-4">
                       <img
-                        src={service.image_url}
+                        src={service.image_url || "/placeholder.png"}
                         className="h-10 w-10 rounded-md object-cover"
+                        alt={service.title}
                       />
                     </td>
 
