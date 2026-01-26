@@ -10,11 +10,14 @@ export const getTrainers = async (page: number) => {
   const { data, count, error } = await supabase
     .from("trainers")
     .select("*", { count: "exact" })
-    .order("created_at", { ascending: false })
     .range(from, to)
 
   if (error) throw error
-  return { data: data as Trainer[], count }
+
+  return {
+    data: (data ?? []) as Trainer[],
+    count: count ?? 0,
+  }
 }
 
 export const createTrainer = async (payload: Partial<Trainer>) => {

@@ -34,7 +34,7 @@ export default function TestimonialsPage() {
       setLoading(true)
       const res = await getTestimonials(page)
       setData(res.data)
-      setTotal(res.count)
+      setTotal(res.count??0)
     } catch (err) {
       console.error("Failed to fetch testimonials", err)
     } finally {
