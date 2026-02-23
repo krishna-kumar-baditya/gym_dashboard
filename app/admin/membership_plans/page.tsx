@@ -139,7 +139,7 @@ export default function MembershipsPage() {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-3">
+              <div className="flex gap-3 h-10">
                 <button
                   onClick={() => {
                     setSelected(p)

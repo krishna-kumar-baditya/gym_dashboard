@@ -51,7 +51,6 @@ export default function ServicesPage() {
     );
   }, [services, search]);
 
-  /* Reset page on search or pageSize change */
   useEffect(() => {
     setPage(1);
   }, [search, pageSize]);
@@ -68,25 +67,19 @@ export default function ServicesPage() {
   /* ===================== DELETE ===================== */
   const handleDelete = useCallback(
     async (service: Service) => {
-      const confirmed = window.confirm(
-        `Delete "${service.title}" service?`
-      );
+      const confirmed = window.confirm(`Delete "${service.title}" service?`);
       if (!confirmed) return;
 
-      /* Optimistic UI update */
       setServices((prev) => prev.filter((s) => s.id !== service.id));
 
       try {
         if (service.image_url) {
           await deleteServiceImage(service.image_url);
         }
-
         await deleteService(service.id);
       } catch (error) {
         console.error("Failed to delete service:", error);
         alert("Failed to delete service. Please refresh.");
-
-        /* Rollback on failure */
         fetchServices();
       }
     },
@@ -95,36 +88,38 @@ export default function ServicesPage() {
 
   /* ===================== UI ===================== */
   return (
-    <div className="p-6 text-slate-200">
-      {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Services</h1>
+    <div className="p-4 sm:p-6 text-slate-200">
+
+      {/* HEADER */}
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-xl sm:text-2xl font-semibold">Services</h1>
 
         <button
           onClick={() => setOpenAdd(true)}
-          className="flex items-center gap-2 rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-500"
+          className="flex items-center justify-center gap-2 rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-500 transition w-full sm:w-auto"
         >
           <Plus size={16} />
           Add Service
         </button>
       </div>
 
-      {/* Card */}
+      {/* CARD */}
       <div className="rounded-xl bg-slate-900/70 shadow-lg backdrop-blur">
-        {/* Card Header */}
-        <div className="flex items-center justify-between border-b border-slate-700 px-5 py-4">
-          <h2 className="text-lg font-medium">Services</h2>
+
+        {/* CARD HEADER */}
+        <div className="flex flex-col gap-3 border-b border-slate-700 px-4 sm:px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-base sm:text-lg font-medium">Services</h2>
 
           <input
             placeholder="Search services..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="rounded-md bg-slate-800 px-3 py-2 text-sm outline-none"
+            className="w-full sm:w-64 rounded-md bg-slate-800 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-teal-500"
           />
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto">
+        {/* DESKTOP TABLE */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-700 text-left text-slate-400">
@@ -135,7 +130,6 @@ export default function ServicesPage() {
                 <th className="px-5 py-3 text-right">Actions</th>
               </tr>
             </thead>
-
             <tbody>
               {loading ? (
                 <tr>
@@ -162,15 +156,8 @@ export default function ServicesPage() {
                         alt={service.title}
                       />
                     </td>
-
-                    <td className="px-5 py-4 font-medium">
-                      {service.title}
-                    </td>
-
-                    <td className="px-5 py-4">
-                      {service.category || "—"}
-                    </td>
-
+                    <td className="px-5 py-4 font-medium">{service.title}</td>
+                    <td className="px-5 py-4">{service.category || "—"}</td>
                     <td className="px-5 py-4">
                       <span
                         className={`rounded-md px-3 py-1 text-xs ${
@@ -182,7 +169,6 @@ export default function ServicesPage() {
                         {service.is_active ? "Active" : "Inactive"}
                       </span>
                     </td>
-
                     <td className="px-5 py-4 text-right">
                       <div className="flex justify-end gap-2">
                         <button
@@ -192,13 +178,13 @@ export default function ServicesPage() {
                           }}
                           className="rounded-md bg-blue-600/20 px-3 py-1 text-xs text-blue-400 hover:bg-blue-600/30"
                         >
-                          ✏ Edit
+                          Edit
                         </button>
                         <button
                           onClick={() => handleDelete(service)}
                           className="rounded-md bg-red-600/20 px-3 py-1 text-xs text-red-400 hover:bg-red-600/30"
                         >
-                          🗑 Delete
+                          Delete
                         </button>
                       </div>
                     </td>
@@ -209,10 +195,68 @@ export default function ServicesPage() {
           </table>
         </div>
 
-        {/* Pagination */}
-        <div className="flex items-center justify-between px-5 py-4 text-sm text-slate-400">
+        {/* MOBILE CARD VIEW */}
+        <div className="md:hidden p-4 space-y-4">
+          {loading ? (
+            <p className="text-center">Loading services...</p>
+          ) : paginatedServices.length === 0 ? (
+            <p className="text-center">No services found</p>
+          ) : (
+            paginatedServices.map((service) => (
+              <div
+                key={service.id}
+                className="rounded-lg bg-slate-800 p-4 space-y-3"
+              >
+                <div className="flex items-center gap-3">
+                  <img
+                    src={service.image_url || "/placeholder.png"}
+                    className="h-12 w-12 rounded-md object-cover"
+                    alt={service.title}
+                  />
+                  <div>
+                    <p className="font-medium">{service.title}</p>
+                    <p className="text-xs text-slate-400">
+                      {service.category || "—"}
+                    </p>
+                  </div>
+                </div>
+
+                <span
+                  className={`inline-block rounded-md px-3 py-1 text-xs ${
+                    service.is_active
+                      ? "bg-green-600/20 text-green-400"
+                      : "bg-slate-600/20 text-slate-400"
+                  }`}
+                >
+                  {service.is_active ? "Active" : "Inactive"}
+                </span>
+
+                <div className="flex gap-2 pt-2">
+                  <button
+                    onClick={() => {
+                      setSelectedService(service);
+                      setOpenEdit(true);
+                    }}
+                    className="flex-1 rounded-md bg-blue-600/20 px-3 py-2 text-xs text-blue-400"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(service)}
+                    className="flex-1 rounded-md bg-red-600/20 px-3 py-2 text-xs text-red-400"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* PAGINATION */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between px-4 sm:px-5 py-4 text-sm text-slate-400">
           <div className="flex items-center gap-2">
-            Rows per page:
+            Rows:
             <select
               value={pageSize}
               onChange={(e) => setPageSize(Number(e.target.value))}
@@ -224,7 +268,7 @@ export default function ServicesPage() {
             </select>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between sm:justify-end gap-3">
             <span>
               {totalItems === 0
                 ? "0"
@@ -238,7 +282,7 @@ export default function ServicesPage() {
             <button
               disabled={page === 1}
               onClick={() => setPage((p) => p - 1)}
-              className="rounded-md bg-slate-800 px-2 py-1 hover:bg-slate-700 disabled:opacity-40"
+              className="rounded-md bg-slate-800 px-3 py-1 disabled:opacity-40"
             >
               ‹
             </button>
@@ -246,7 +290,7 @@ export default function ServicesPage() {
             <button
               disabled={page === totalPages || totalPages === 0}
               onClick={() => setPage((p) => p + 1)}
-              className="rounded-md bg-slate-800 px-2 py-1 hover:bg-slate-700 disabled:opacity-40"
+              className="rounded-md bg-slate-800 px-3 py-1 disabled:opacity-40"
             >
               ›
             </button>
@@ -254,7 +298,7 @@ export default function ServicesPage() {
         </div>
       </div>
 
-      {/* ADD MODAL */}
+      {/* MODALS */}
       <AddServiceForm
         open={openAdd}
         onClose={() => {
@@ -263,7 +307,6 @@ export default function ServicesPage() {
         }}
       />
 
-      {/* EDIT MODAL */}
       <EditServiceForm
         open={openEdit}
         service={selectedService}

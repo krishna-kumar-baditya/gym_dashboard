@@ -27,7 +27,7 @@ const menuItems = [
   { label: "Messages", icon: Mail, path: "/admin/contact_messages" },
   { label: "Blog", icon: FileText, path: "/admin/blog" },
   { label: "Media Gallery", icon: Image, path: "/admin/gallery" },
-  { label: "Settings", icon: Settings, path: "/admin/settings" },
+  // { label: "Settings", icon: Settings, path: "/admin/settings" },
 ]
 
 export default function Sidebar({
